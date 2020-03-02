@@ -1,30 +1,30 @@
 #pragma once
 
 namespace NodeAttributes {
-constexpr char* flexDirection = "flexDirection";
-constexpr char* justifyContent = "justifyContent";
-constexpr char* alignContent = "alignContent";
-constexpr char* alignItems = "alignItems";
-constexpr char* alignSelf = "alignSelf";
-constexpr char* position = "position";
-constexpr char* flexWrap = "flexWrap";
-constexpr char* flex = "flex";
-constexpr char* flexGrow = "flexGrow";
-constexpr char* height = "height";
-constexpr char* width = "width";
-constexpr char* aspectRatio = "aspectRatio";
+static const char* flexDirection = "flexDirection";
+static const char* justifyContent = "justifyContent";
+static const char* alignContent = "alignContent";
+static const char* alignItems = "alignItems";
+static const char* alignSelf = "alignSelf";
+static const char* position = "position";
+static const char* flexWrap = "flexWrap";
+static const char* flex = "flex";
+static const char* flexGrow = "flexGrow";
+static const char* height = "height";
+static const char* width = "width";
+static const char* aspectRatio = "aspectRatio";
 
-constexpr char* margin = "margin";
-constexpr char* padding = "padding";
+static const char* margin = "margin";
+static const char* padding = "padding";
 
-constexpr char* children = "children";
+static const char* children = "children";
 
-constexpr char* text = "text";
-constexpr char* image = "image";
+static const char* text = "text";
+static const char* image = "image";
 
-constexpr char* color = "color";
-constexpr char* font = "font";
-constexpr char* fontSize = "fontSize";
-constexpr char* fontWeight = "fontWeight";
-constexpr char* gradient = "gradient";
+static const char* color = "color";
+static const char* font = "font";
+static const char* fontSize = "fontSize";
+static const char* fontWeight = "fontWeight";
+static const char* gradient = "gradient";
 }

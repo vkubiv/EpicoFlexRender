@@ -12,6 +12,7 @@ constexpr char* flex = "flex";
 constexpr char* flexGrow = "flexGrow";
 constexpr char* height = "height";
 constexpr char* width = "width";
+constexpr char* aspectRatio = "aspectRatio";
 
 constexpr char* margin = "margin";
 constexpr char* padding = "padding";

@@ -1,3 +1,7 @@
 #pragma once
 
-#include "yoga/Yoga.h"
+#ifndef YOGA_INCLUDE
+# define YOGA_INCLUDE "yoga/Yoga.h"
+#endif 
+
+#include YOGA_INCLUDE

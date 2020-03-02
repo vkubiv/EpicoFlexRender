@@ -21,6 +21,7 @@ readLayoutAttributes(YGNodeRef ygNode, json::Value& jsonNode)
   ReadSimpleFloat(AttributesReader::FlexGrow, ygNode, jsonNode);
   ReadFloat(AttributesReader::Width, ygNode, jsonNode);
   ReadFloat(AttributesReader::Height, ygNode, jsonNode);
+  ReadSimpleFloat(AttributesReader::AspectRatio, ygNode, jsonNode);
   ReadEdgeProperty(AttributesReader::Padding, ygNode, jsonNode);
   ReadEdgeProperty(AttributesReader::Margin, ygNode, jsonNode);
 }

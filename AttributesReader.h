@@ -142,9 +142,14 @@ const auto FlexGrow =
 const auto Width = MakeFloatDesc(NodeAttributes::width,
                                  YGNodeStyleSetWidth,
                                  YGNodeStyleSetWidthPercent);
+
 const auto Height = MakeFloatDesc(NodeAttributes::height,
                                   YGNodeStyleSetHeight,
                                   YGNodeStyleSetHeightPercent);
+
+const auto AspectRatio = MakeSimpleFloatDesc(NodeAttributes::aspectRatio,
+                                  YGNodeStyleSetAspectRatio);
+
 
 const auto Margin = MakeFloatDesc(NodeAttributes::margin,
                                   YGNodeStyleSetMargin,

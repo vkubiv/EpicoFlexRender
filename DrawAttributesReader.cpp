@@ -110,7 +110,7 @@ DrawAttributesReader::readGradient(SkPaint& paint,
 
   auto& gradient = node[NodeAttributes::backgroundGradient];
   if (gradient.IsArray()) {
-    auto& array = gradient.GetArray();
+    auto array = gradient.GetArray();
 
     SkPoint gradientDir =
       SkPoint::Make(readFloatPercent(array[0]) * nodeWidth,

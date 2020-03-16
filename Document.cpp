@@ -10,28 +10,52 @@ using YGSafeNodePtr = std::unique_ptr<YGNode, decltype(&YGNodeFreeRecursive)>;
 void
 readLayoutAttributes(YGNodeRef ygNode, json::Value& jsonNode)
 {
-  ReadEnum(AttributesReader::FlexDirection, ygNode, jsonNode);
-  ReadEnum(AttributesReader::JustifyConten, ygNode, jsonNode);
-  ReadEnum(AttributesReader::AlignContent, ygNode, jsonNode);
-  ReadEnum(AttributesReader::AlignItems, ygNode, jsonNode);
-  ReadEnum(AttributesReader::AlignSelf, ygNode, jsonNode);
-  ReadEnum(AttributesReader::PositionType, ygNode, jsonNode);
-  ReadEnum(AttributesReader::FlexWrap, ygNode, jsonNode);
-  ReadSimpleFloat(AttributesReader::Flex, ygNode, jsonNode);
-  ReadSimpleFloat(AttributesReader::FlexGrow, ygNode, jsonNode);
-  ReadFloat(AttributesReader::Width, ygNode, jsonNode);
-  ReadFloat(AttributesReader::Height, ygNode, jsonNode);
-  ReadSimpleFloat(AttributesReader::AspectRatio, ygNode, jsonNode);
-  ReadEdgeProperty(AttributesReader::Padding, ygNode, jsonNode);
-  ReadEdgeProperty(AttributesReader::Margin, ygNode, jsonNode);
+  if (!jsonNode.HasMember(NodeAttributes::style))
+    return;
+
+  auto& styleNode = jsonNode[NodeAttributes::style];
+
+  ReadEnum(AttributesReader::FlexDirection, ygNode, styleNode);
+  ReadEnum(AttributesReader::JustifyConten, ygNode, styleNode);
+  ReadEnum(AttributesReader::AlignContent, ygNode, styleNode);
+  ReadEnum(AttributesReader::AlignItems, ygNode, styleNode);
+  ReadEnum(AttributesReader::AlignSelf, ygNode, styleNode);
+  ReadEnum(AttributesReader::PositionType, ygNode, styleNode);
+  ReadEnum(AttributesReader::FlexWrap, ygNode, styleNode);
+  ReadSimpleFloat(AttributesReader::Flex, ygNode, styleNode);
+  ReadSimpleFloat(AttributesReader::FlexGrow, ygNode, styleNode);
+  ReadFloat(AttributesReader::Width, ygNode, styleNode);
+  ReadFloat(AttributesReader::Height, ygNode, styleNode);
+  ReadSimpleFloat(AttributesReader::AspectRatio, ygNode, styleNode);
+  ReadEdgeProperty(AttributesReader::Padding, ygNode, styleNode);
+  ReadEdgeProperty(AttributesReader::Margin, ygNode, styleNode);
+}
+
+void
+readStyleAttributes(DrawAttributesReader& drawAttributesReader,
+                    json::Value& jsonNode)
+{
+  if (!jsonNode.HasMember(NodeAttributes::style))
+    return;
+
+  auto& styleNode = jsonNode[NodeAttributes::style];
+  auto& currentDrawParams = drawAttributesReader.currentDrawParams();
+
+  drawAttributesReader.readFont(currentDrawParams.font, styleNode);
 }
 
 YGNodeRef
 readNode(json::Value& jsonNode, DrawAttributesReader& drawAttributesReader)
 {
+
+  drawAttributesReader.saveDrawParams();
+
   YGSafeNodePtr ygNode(YGNodeNew(), YGNodeFreeRecursive);
   readLayoutAttributes(ygNode.get(), jsonNode);
   YGNodeSetContext(ygNode.get(), &jsonNode);
+  
+  readStyleAttributes(drawAttributesReader, jsonNode);
+  
 
   if (jsonNode.HasMember(NodeAttributes::children)) {
     auto& children = jsonNode[NodeAttributes::children];
@@ -47,10 +71,13 @@ readNode(json::Value& jsonNode, DrawAttributesReader& drawAttributesReader)
   }
 
   if (jsonNode.HasMember(NodeAttributes::text)) {
-    auto textBlob = drawAttributesReader.readText(jsonNode);
+    auto textBlob = drawAttributesReader.readText(
+      drawAttributesReader.currentDrawParams().font, jsonNode);
     YGNodeStyleSetMinWidth(ygNode.get(), textBlob->bounds().width());
     YGNodeStyleSetMinHeight(ygNode.get(), textBlob->bounds().height());
   }
+
+  drawAttributesReader.restoreDrawParams();
 
   return ygNode.release();
 }

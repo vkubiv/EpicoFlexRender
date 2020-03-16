@@ -17,14 +17,15 @@ constexpr char* aspectRatio = "aspectRatio";
 constexpr char* margin = "margin";
 constexpr char* padding = "padding";
 
-constexpr char* children = "children";
-
-constexpr char* text = "text";
-constexpr char* image = "image";
-
 constexpr char* color = "color";
 constexpr char* font = "font";
 constexpr char* fontSize = "fontSize";
 constexpr char* fontWeight = "fontWeight";
-constexpr char* gradient = "gradient";
+constexpr char* backgroundGradient = "backgroundGradient";
+
+constexpr char* style = "style";
+
+constexpr char* children = "children";
+constexpr char* text = "text";
+constexpr char* image = "image";
 }

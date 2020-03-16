@@ -61,15 +61,14 @@ readColorHex(json::Value& node)
 }
 
 sk_sp<SkTextBlob>
-DrawAttributesReader::readText(json::Value& nodeWithText)
+DrawAttributesReader::readText(SkFont& font, json::Value& nodeWithText)
 {
   if (!nodeWithText.HasMember(NodeAttributes::text)) {
     return nullptr;
   }
 
   auto& text = nodeWithText[NodeAttributes::text];
-  if (text.IsString()) {
-    auto font = readFont(nodeWithText);
+  if (text.IsString()) {    
     return SkTextBlob::MakeFromString(text.GetString(), font);
   }
 
@@ -77,21 +76,19 @@ DrawAttributesReader::readText(json::Value& nodeWithText)
     "readText can read only nodes that have 'text' attribute with string type");
 }
 
-SkFont
-DrawAttributesReader::readFont(json::Value& nodeWithFont)
+void
+DrawAttributesReader::readFont(SkFont& font, json::Value& nodeWithFont)
 {
-  SkFont font;
+  ;
   if (nodeWithFont.HasMember(NodeAttributes::font)) {
+    font.setEdging(SkFont::Edging::kSubpixelAntiAlias);
+    font.setSubpixel(true);
     font.setTypeface(
       fontFactory_->load(nodeWithFont[NodeAttributes::font].GetString()));
   }
   readFloat(NodeAttributes::fontSize, nodeWithFont, [&](float size) {
     font.setSize(size);
   });
-
-  font.setEdging(SkFont::Edging::kSubpixelAntiAlias);
-  font.setSubpixel(true);
-  return font;
 }
 
 void
@@ -108,10 +105,10 @@ DrawAttributesReader::readGradient(SkPaint& paint,
                                    float nodeWidth,
                                    float nodeHeight)
 {
-  if (!node.HasMember(NodeAttributes::gradient))
+  if (!node.HasMember(NodeAttributes::backgroundGradient))
     return;
 
-  auto& gradient = node[NodeAttributes::gradient];
+  auto& gradient = node[NodeAttributes::backgroundGradient];
   if (gradient.IsArray()) {
     auto& array = gradient.GetArray();
 
@@ -162,4 +159,21 @@ DrawAttributesReader::readImage(json::Value& nodeWithImage)
   }
 
   return sk_sp<SkImage>();
+}
+
+DrawAttributesReader::DrawParams&
+DrawAttributesReader::currentDrawParams()
+{
+  return drawParamsStack_.back();
+}
+
+void
+DrawAttributesReader::saveDrawParams()
+{
+  drawParamsStack_.push_back(drawParamsStack_.back());
+}
+void
+DrawAttributesReader::restoreDrawParams()
+{
+  drawParamsStack_.pop_back();
 }

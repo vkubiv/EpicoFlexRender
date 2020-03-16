@@ -13,6 +13,7 @@ void
 DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
 {
   canvas.save();
+  reader_.saveDrawParams();
 
   canvas.translate(YGNodeLayoutGetLeft(node), YGNodeLayoutGetTop(node));
 
@@ -27,20 +28,12 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
       canvas.drawImageRect(image, rect, nullptr);
     }
 
-    SkPaint paint;
-    reader_.readPaintAttributes(paint, *jsonNode);
-
-    if (jsonNode->HasMember(NodeAttributes::gradient)) {
-      SkPaint gradient;
-      reader_.readGradient(gradient,
-                           *jsonNode,
-                           YGNodeLayoutGetWidth(node),
-                           YGNodeLayoutGetHeight(node));
-      canvas.drawRect(rect, gradient);
-    }
+    SkPaint& paint = reader_.currentDrawParams().paint;
+    SkFont& font = reader_.currentDrawParams().font;
+    readStyle(paint, font, *jsonNode, node, canvas, rect);    
 
     if (jsonNode->HasMember(NodeAttributes::text)) {
-      auto textBlob = reader_.readText(*jsonNode);
+      auto textBlob = reader_.readText(font , * jsonNode);
 
       paint.setBlendMode(SkBlendMode::kSrcATop);
 
@@ -52,5 +45,31 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
   for (int i = 0; i < YGNodeGetChildCount(node); ++i)
     renderNode(canvas, YGNodeGetChild(node, i));
 
+  reader_.restoreDrawParams();
   canvas.restore();
+}
+
+void
+DocumentRender::readStyle(SkPaint& paint,
+                          SkFont& font,
+                          rapidjson::Value& jsonNode,
+                          const YGNodeRef& node,
+                          SkCanvas& canvas,
+                          const SkRect& rect)
+{
+  if (!jsonNode.HasMember(NodeAttributes::style))
+    return;
+
+  auto& style = jsonNode[NodeAttributes::style];
+
+  reader_.readPaintAttributes(paint, style);
+  reader_.readFont(font, style);
+
+  if (style.HasMember(NodeAttributes::backgroundGradient)) {
+    SkPaint gradient;
+    reader_.readGradient(gradient, style,
+                         YGNodeLayoutGetWidth(node),
+                         YGNodeLayoutGetHeight(node));
+    canvas.drawRect(rect, gradient);
+  }
 }

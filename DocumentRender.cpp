@@ -35,7 +35,7 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
     if (jsonNode->HasMember(NodeAttributes::text)) {
       auto textBlob = reader_.readText(font , * jsonNode);
 
-      paint.setBlendMode(SkBlendMode::kSrcATop);
+      paint.setBlendMode(SkBlendMode::kSrc);
 
       canvas.drawTextBlob(
         textBlob, -textBlob->bounds().fLeft, -textBlob->bounds().fTop, paint);

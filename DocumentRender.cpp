@@ -7,7 +7,7 @@
 #include "include/core/SkTextBlob.h"
 #include <codecvt>
 #include <vector>
-
+#include <locale>
 
 #if _MSC_VER >= 1900
 

@@ -82,19 +82,16 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
       for (size_t i = 0; i < glyphs.size(); ++i) {
         glyphs[i].id = font.unicharToGlyph(utf32[i]);
         
+        glyphs[i].font = font;
 
-        if (glyphs[i].id > 0) {
-          glyphs[i].font = font;
-        } else {
+        if (glyphs[i].id == 0) {
+        
           sk_sp<SkTypeface> fallback(mgr->matchFamilyStyleCharacter(
             nullptr, font.getTypeface()->fontStyle(), nullptr, 0, utf32[i]));
 
-          glyphs[i].font.setEdging(SkFont::Edging::kSubpixelAntiAlias);
-          glyphs[i].font.setSubpixel(true);
           glyphs[i].font.setTypeface(fallback);
           glyphs[i].id = glyphs[i].font.unicharToGlyph(utf32[i]);
         }
-
 
         glyphs[i].font.getWidthsBounds(&glyphs[i].id, 1, &glyphs[i].width, &glyphs[i].bounds, &paint);
       }   

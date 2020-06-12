@@ -24,6 +24,7 @@ public:
   }
 
   sk_sp<SkTextBlob> readText(SkFont& font, json::Value& nodeWithText);
+  std::string readStringText(json::Value& nodeWithText);
 
   void readFont(SkFont& font, json::Value& nodeWithFont);
 

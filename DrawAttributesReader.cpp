@@ -75,6 +75,21 @@ DrawAttributesReader::readText(SkFont& font, json::Value& nodeWithText)
   throw std::runtime_error(
     "readText can read only nodes that have 'text' attribute with string type");
 }
+std::string
+DrawAttributesReader::readStringText(json::Value& nodeWithText)
+{
+  if (!nodeWithText.HasMember(NodeAttributes::text)) {
+    return nullptr;
+  }
+
+  auto& text = nodeWithText[NodeAttributes::text];
+  if (text.IsString()) {
+    return text.GetString();
+  }
+
+  throw std::runtime_error(
+    "readText can read only nodes that have 'text' attribute with string type");
+}
 
 void
 DrawAttributesReader::readFont(SkFont& font, json::Value& nodeWithFont)

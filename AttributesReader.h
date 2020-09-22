@@ -5,6 +5,7 @@
 #include "yoga.h"
 #include <array>
 #include <string>
+#include <stdexcept>
 
 namespace AttributesReader {
 template<class Value>

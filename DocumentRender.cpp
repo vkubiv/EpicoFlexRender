@@ -58,10 +58,15 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
   json::Value* jsonNode = static_cast<json::Value*>(YGNodeGetContext(node));
   if (jsonNode) {
 
+
     if (jsonNode->HasMember(NodeAttributes::image)) {
+      SkPaint paint;
+      paint.setFilterQuality(kHigh_SkFilterQuality);
+      paint.setAntiAlias(true);
       auto image = reader_.readImage(*jsonNode);
-      canvas.drawImageRect(image, rect, nullptr);
+      canvas.drawImageRect(image, rect, &paint);
     }
+
 
     SkPaint& paint = reader_.currentDrawParams().paint;
     SkFont& font = reader_.currentDrawParams().font;
@@ -94,6 +99,7 @@ DocumentRender::renderNode(SkCanvas& canvas, YGNodeRef node)
         }
 
         glyphs[i].font.getWidthsBounds(&glyphs[i].id, 1, &glyphs[i].width, &glyphs[i].bounds, &paint);
+
       }   
       
       SkScalar offset = 0;

@@ -5,6 +5,7 @@
 #include "include/ports/SkFontMgr_android.h"
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 namespace {
 template<class Setter>
